@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Col, Form } from "react-bootstrap";
-import CreateChapter from "./CreateChapter";
+import Home from './Home'
+
 
 
 
 
 function App() {
     return (
-        <CreateChapter></CreateChapter>
+        <Home key="home"></Home>
     );
   }
   

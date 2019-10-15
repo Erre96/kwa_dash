@@ -1,22 +1,14 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Col, Form } from "react-bootstrap";
+import { Card, Button, Row, Col, Form } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
-import firebase from "firebase"
+import firebase from "firebase";
 
 
-class Shit {
-    constructor() {
-        let a = 1;
-        let b = "shiot";
-    }
-}
 
-class createChapter extends React.Component {
+class CreateChapter extends React.Component {
     constructor(props) {
         super(props)
-
-        this.shit = new Shit();
 
         this.handleInputchange = this.handleInputchange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
@@ -26,9 +18,9 @@ class createChapter extends React.Component {
             title: '',
             subHead: '',
             locked: false,
-            description: '',
+            bodyText: '',
             videoLink: '',
-            id: 0,
+            id: '',
         }
     }
 
@@ -44,18 +36,15 @@ class createChapter extends React.Component {
         })
     }
     writeToFirebase() {
-        // let length = getLengthOfExistingChapters();
-        // this.state.id = length + 1;
-
         let data = {
             title: this.state.title,
             subHead: this.state.subHead,
             locked: this.state.locked,
-            description: this.state.description,
+            bodyText: this.state.bodyText,
             videoLink: this.state.videoLink,
             id: this.state.id,
         }
-        
+
         var portalsRef = db.collection("chapters").doc("portals");
         portalsRef.get()
             .then((docSnapshot) => {
@@ -66,6 +55,7 @@ class createChapter extends React.Component {
                         })
                             .then(function () {
                                 console.log("Document successfully updated!");
+                                writeToDatabase2(data);
                             })
                             .catch(function (error) {
                                 // The document probably doesn't exist.
@@ -77,7 +67,8 @@ class createChapter extends React.Component {
                         list: firebase.firestore.FieldValue.arrayUnion(data)
                     })
                         .then(function () {
-                            console.log("Document successfully updated!");
+                            console.log("Document successfully created!");
+                            writeToDatabase2(data);
                         })
                         .catch(function (error) {
                             // The document probably doesn't exist.
@@ -86,40 +77,67 @@ class createChapter extends React.Component {
                 }
             });
     }
+
     render() {
-        const { title, subHead, locked, description, videoLink } = this.state
+        const { title, subHead, locked, description, videoLink, id } = this.state
         //  console.log(title, subHead,locked, description, videoLink);
 
         return (
-            <Container>
-                <Row className="mt-3 justify-content-center">
+            <Card>
+                <Row className="mt-2 justify-content-center">
                     <Col className="text-center">
                         <h1>Create Chapter</h1>
-                        <p>Title of the chapter</p>
-                        <input type="text" onChange={this.handleInputchange} name='title' value={title}></input>
+                        <div className="mt-3">
+                            <p>Title of the chapter</p>
+                            <input type="text" onChange={this.handleInputchange} name='title' value={title}></input>
+                        </div>
 
-                        <p>Subhead</p>
-                        <input type="text" onChange={this.handleInputchange} name='subHead' value={subHead}></input>
+                        <div className="mt-3">
+                            <p>Subhead</p>
+                            <input type="text" onChange={this.handleInputchange} name='subHead' value={subHead}></input>
+                        </div>
 
-                        <p>Locked content?</p>
-                        <Form.Check type="checkbox" name="locked" checked={locked} onChange={this.handleCheckboxChange} />
+                        <div className="mt-3">
+                            <p>Id</p>
+                            <input type="text" onChange={this.handleInputchange} name='id' value={id}></input>
+                        </div>
 
-                        <p>Description of the Chapter</p>
-                        <textarea rows="4" cols="50" type="text" onChange={this.handleInputchange} name="description" value={description}></textarea>
+                        <div className="mt-3">
+                            <p>Locked content?</p>
+                            <Form.Check type="checkbox" name="locked" checked={locked} onChange={this.handleCheckboxChange} />
+                        </div>
 
-                        <p>Video link</p>
-                        <textarea rows="1" cols="60" type="text" onChange={this.handleInputchange} name="videoLink"></textarea>
+                        <div className="mt-3">
+                            <p>Description of the Chapter</p>
+                            <textarea rows="4" cols="50" type="text" onChange={this.handleInputchange} name="bodyText" value={description}></textarea>
+                        </div>
+
+                        <div className="mt-3">
+                            <p>Video link</p>
+                            <textarea rows="1" cols="60" type="text" onChange={this.handleInputchange} name="videoLink"></textarea>
+                        </div>
+
+                        <div className="mt-3">
+                            <Button onClick={this.writeToFirebase}>Add</Button>
+                        </div>
 
                     </Col>
                 </Row>
-                <Row className="mt-3 justify-content-center">
-                    <Col className="text-center">
-                        <Button onClick={this.writeToFirebase}>Add</Button>
-                    </Col>
-                </Row>
-            </Container>
+            </Card>
         )
     }
+}
+
+
+async function writeToDatabase2(data) {
+    var idRef = db.collection("chapters").doc(data.id);
+    idRef.set({
+        title: data.title,
+        bodyText: data.bodyText,
+        videoLink: data.videoLink,
+        subHead:data.subHead,
+        id:data.id,
+    });
 }
 
 async function readChapterFromFirebase() {
@@ -140,4 +158,4 @@ async function readChapterFromFirebase() {
         */
 }
 
-export default createChapter
+export default CreateChapter
