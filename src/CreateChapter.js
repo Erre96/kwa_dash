@@ -1,9 +1,10 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button, Row, Col, Form } from "react-bootstrap";
+import { Card, Button, Row, Col, Form, Alert } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 
+var chapterAdded = false;
 
 
 class CreateChapter extends React.Component {
@@ -35,6 +36,20 @@ class CreateChapter extends React.Component {
             [event.target.name]: !this.state.locked
         })
     }
+
+    async writeToDatabase2(data) {
+        var idRef = db.collection("chapters").doc(data.id);
+        idRef.set({
+            title: data.title,
+            bodyText: data.bodyText,
+            videoLink: data.videoLink,
+            subHead: data.subHead,
+            id: data.id,
+        });
+        chapterAdded = true;
+        this.setState({})
+    }
+
     writeToFirebase() {
         let data = {
             title: this.state.title,
@@ -44,6 +59,7 @@ class CreateChapter extends React.Component {
             videoLink: this.state.videoLink,
             id: this.state.id,
         }
+        
 
         var portalsRef = db.collection("chapters").doc("portals");
         portalsRef.get()
@@ -55,7 +71,7 @@ class CreateChapter extends React.Component {
                         })
                             .then(function () {
                                 console.log("Document successfully updated!");
-                                writeToDatabase2(data);
+                                this.writeToDatabase2(data);
                             })
                             .catch(function (error) {
                                 // The document probably doesn't exist.
@@ -68,7 +84,7 @@ class CreateChapter extends React.Component {
                     })
                         .then(function () {
                             console.log("Document successfully created!");
-                            writeToDatabase2(data);
+                            this.writeToDatabase2(data);
                         })
                         .catch(function (error) {
                             // The document probably doesn't exist.
@@ -128,34 +144,20 @@ class CreateChapter extends React.Component {
     }
 }
 
-
-async function writeToDatabase2(data) {
-    var idRef = db.collection("chapters").doc(data.id);
-    idRef.set({
-        title: data.title,
-        bodyText: data.bodyText,
-        videoLink: data.videoLink,
-        subHead:data.subHead,
-        id:data.id,
-    });
-}
-
-async function readChapterFromFirebase() {
-    let portals = await db.collection("chapters").doc("portals").get();
-    let gg = portals.data();
-    console.log(gg.list[0]);
-    /*
-        portals.then(function(doc) {
-            if (doc.exists) {
-                console.log("Document data:", doc.data().list.length);
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-        */
+function sendMessage() {
+    return (
+        <Alert variant="success">
+            <Alert.Heading>You succesfully created a new chapter!</Alert.Heading>
+            <p>
+                Good job.
+        </p>
+            <hr />
+            <p className="mb-0">
+                Whenever you need to, be sure to use margin utilities to keep things nice
+                and tidy.
+        </p>
+        </Alert>
+    )
 }
 
 export default CreateChapter

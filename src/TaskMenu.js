@@ -1,39 +1,86 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Col, Card } from "react-bootstrap";
+import { Container, Button, Row, Col, Card, Form, Input } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 
+var htmlText;
+var taskId;
 
-var chapters = [];
+
 
 export default class TaskMenu extends React.Component {
     constructor(props) {
         super(props);
 
         this.goToTaskCreation = this.goToTaskCreation.bind(this);
+        this.writeToFirebase = this.writeToFirebase.bind(this)
 
         this.state = {
             chapterChosen: false,
             chosenChapterId: '',
+            chapters: [],
+            openChapter: '',
 
         }
 
     }
 
+    writeToFirebase() {
+        console.log(this.state.chosenChapterId);
+        let task = {
+            text: htmlText,
+            id: taskId,
+            done: false
+        }
+
+        let chapterId = this.state.chosenChapterId;
+
+
+        var portalsRef = db.collection("chapters").doc(chapterId);
+        portalsRef.get()
+            .then((docSnapshot) => {
+                if (docSnapshot.exists) {
+                    portalsRef.onSnapshot((doc) => {
+                        portalsRef.update({
+                            tasks: firebase.firestore.FieldValue.arrayUnion(task)
+                        })
+                            .then(function () {
+                                console.log("Document successfully updated!");
+                            })
+                            .catch(function (error) {
+                                // The document probably doesn't exist.
+                                console.error("Error updating document: ", error);
+                            });
+                    });
+                } else {
+                    portalsRef.set({
+                        list: firebase.firestore.FieldValue.arrayUnion(task)
+                    })
+                        .then(function () {
+                            console.log("Document successfully created!");
+                        })
+                        .catch(function (error) {
+                            // The document probably doesn't exist.
+                            console.error("Error updating document: ", error);
+                        });
+                }
+            });
+    }
+
     render() {
-        getChaptersListFromFirebase();
-        if (this.state.chapterChosen == false) {
+        console.log(this.state.chosenChapterId+"    hoo");
+        if (this.state.chapterChosen === false) {
             return (
                 <Container>
                     {
-                        getChaptersList().map((chap, index) => {
+                        this.state.chapters.map((chap, index) => {
                             return (
-                                <Card key={index}>
-                                    <Row className="mt-5">
+                                <Card className="mt-3" key={index}>
+                                    <Row className="mt-5 justify-content-center">
                                         <Col className="text-center">
                                             <div>
-                                                <h5>{chap.title}</h5>
+                                                <h3>{chap.title}</h3>
                                                 <p>{chap.subHead}</p>
                                             </div>
                                         </Col>
@@ -50,46 +97,91 @@ export default class TaskMenu extends React.Component {
                 </Container>
             )
         }
-        if(this.state.chapterChosen == true)
-        {
+        if (this.state.chapterChosen === true) {
             return (
-                <div className="mt-3">
-                <p></p>
-            </div>
+                <Container>
+                    <div className="mt-3 text-center">
+
+                        <Row className="justify-content-center">
+                            <h3>{this.state.openChapter.title}</h3>
+                        </Row>
+                        <Row className="justify-content-center">
+                            <h5 style={{ marginLeft: 15, fontStyle: "oblique" }}> {this.state.openChapter.subHead}</h5>
+                        </Row>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Id</label>
+                        <input type="text" className="form-control" onChange={this.setTaskId}></input>
+                        <small>Övningen det gäller, exempelvis 1, 2 eller 3 </small>
+                    </div>
+
+                    <div className="form-group">
+                        <label>HTML Text</label>
+                        <textarea col="5" rows="5" type="text" className="form-control" onChange={this.setHtmlText}></textarea>
+                        <small>Konvertera PDF texten till HTML online och klistra in resultatet här.</small>
+                        <br />
+                        <small>Här är en bra länk för att göra detta</small><br />
+                        <a className="form-control" href="https://www.froala.com/online-html-editor">https://www.froala.com/online-html-editor</a>
+                        <Button onClick={this.writeToFirebase} >Lägg till övning</Button>
+                    </div>
+                </Container>
             )
         }
     }
-    goToTaskCreation = (event) => {
-        this.state.chapterChosen = true;
 
-        this.setState({
-            chosenChapterId: event.target.value
-        })
+    setHtmlText(event){htmlText = event.target.value;}
+    setTaskId(event){taskId = event.target.value;}
+
+    componentDidMount() {
+        this.mounted = true;
+        this.getData();
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
+    async getData() {
+        console.log("get data called");
+
+        const snap = await db.collection("chapters").doc("portals").get();
+        const doc = snap.data();
+
+        if (this.mounted) {
+            this.setState({
+                chapters: doc.list
+            });
+        }
+    }
+
+
+    async setOpenChapter() {
+
+        let snap = await db.collection("chapters").doc(this.state.chosenChapterId).get();
+        let doc = snap.data();
+
+        //console.log(doc.title + "   ye");
+
+        if (this.mounted) {
+            this.setState({
+                openChapter: doc,
+            });
+        }
+    }
+    goToTaskCreation = (event) => {
+        this.state.chosenChapterId = event.target.value;
+        this.state.chapterChosen = true;
+        this.setOpenChapter();
     }
 
     goToTaskCreation() {
 
-        console.log("shit");
+        this.getChosenChapter();
     }
-}
-function getChaptersList() {
-    console.log(chapters);
-    return chapters;
-}
 
-    function getChaptersListFromFirebase() {
-    let portalsRef = db.collection("chapters").doc("portals");
-    portalsRef.get().then(function (doc) {
-        if (doc.exists) {
-            //console.log("Document data:", doc.data());
-            let data = doc.data();
-            chapters = data.list;
-            //console.log(chapters);
-        } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-        }
-    }).catch(function (error) {
-        console.log("Error getting document:", error);
-    });
+    getChaptersList() {
+        console.log(this.state.chapters);
+        return this.state.chapters;
+    }
 }
