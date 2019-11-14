@@ -53,6 +53,7 @@ class CreateChapter extends React.Component {
 
         idRef.set({
             title: this.state.title,
+            bodyTitle: this.state.bodyTitle,
             bodyText: this.state.bodyText,
             subHead: this.state.subHead,
             videos: videos,
