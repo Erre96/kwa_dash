@@ -86,7 +86,9 @@ export default class TaskMenu extends React.Component {
                                         </Col>
 
                                         <Col>
-                                            <Button value={chap.id} onClick={this.goToTaskCreation}>Lägg till övning</Button>
+                                            <Button style={{marginLeft:10}}value={chap.id} onClick={this.goToTaskCreation}>Lägg till övning</Button>
+                                            <Button style={{marginLeft:10, backgroundColor:('green')}}value={chap.id} onClick={this.goToTaskCreation}>Redigera</Button>
+                                            <Button style={{marginLeft:10, backgroundColor:('red')}}value={chap.id} onClick={this.goToTaskCreation}>Ta bort</Button>          
                                         </Col>
                                         <br />
                                     </Row>
