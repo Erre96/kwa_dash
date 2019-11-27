@@ -20,7 +20,7 @@ class CreateChapter extends React.Component {
             title: '',
             subHead: '',
             premium: false,
-            bodyTitle:'',
+            bodyTitle: '',
             bodyText: '',
             firstVideoTitle: '',
             firstVideoLink: '',
@@ -48,7 +48,7 @@ class CreateChapter extends React.Component {
         let videos = [];
 
         if (this.state.firstVideoTitle != null && this.state.firstVideoLink != null) {
-            videos.push({title: this.state.firstVideoTitle, url: this.state.firstVideoLink})
+            videos.push({ title: this.state.firstVideoTitle, url: this.state.firstVideoLink })
         }
 
         idRef.set({
@@ -76,19 +76,17 @@ class CreateChapter extends React.Component {
         portalsRef.get()
             .then((docSnapshot) => {
                 if (docSnapshot.exists) {
-                    portalsRef.onSnapshot((doc) => {
-                        portalsRef.update({
-                            list: firebase.firestore.FieldValue.arrayUnion(portalData)
+                    portalsRef.update({
+                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
+                    })
+                        .then(function () {
+                            console.log("Document successfully updated!");
+                            this.WriteChapter(portalData);
                         })
-                            .then(function () {
-                                console.log("Document successfully updated!");
-                                this.WriteChapter(portalData);
-                            })
-                            .catch(function (error) {
-                                // The document probably doesn't exist.
-                                console.error("Error updating document: ", error);
-                            });
-                    });
+                        .catch(function (error) {
+                            // The document probably doesn't exist.
+                            console.error("Error updating document: ", error);
+                        });
                 } else {
                     portalsRef.set({
                         list: firebase.firestore.FieldValue.arrayUnion(portalData)

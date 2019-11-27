@@ -3,10 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Button, Row, Col, Card, Form, Input } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
+import { async } from 'q';
 
 var htmlText;
-var taskId;
-
 
 
 export default class TaskMenu extends React.Component {
@@ -30,7 +29,7 @@ export default class TaskMenu extends React.Component {
         console.log(this.state.chosenChapterId);
         let task = {
             text: htmlText,
-            id: taskId,
+            id: 5,
             done: false
         }
 
@@ -88,7 +87,7 @@ export default class TaskMenu extends React.Component {
                                         <Col>
                                             <Button style={{marginLeft:10}}value={chap.id} onClick={this.goToTaskCreation}>Lägg till övning</Button>
                                             <Button style={{marginLeft:10, backgroundColor:('green')}}value={chap.id} onClick={this.goToTaskCreation}>Redigera</Button>
-                                            <Button style={{marginLeft:10, backgroundColor:('red')}}value={chap.id} onClick={this.goToTaskCreation}>Ta bort</Button>          
+                                            <Button style={{marginLeft:10, backgroundColor:('red')}}value={chap.id} onClick={()=>(this.deleteDocument(chap.id))}>Ta bort</Button>          
                                         </Col>
                                         <br />
                                     </Row>
@@ -113,12 +112,6 @@ export default class TaskMenu extends React.Component {
                     </div>
 
                     <div className="form-group">
-                        <label>Id</label>
-                        <input type="text" className="form-control" onChange={this.setTaskId}></input>
-                        <small>Övningen det gäller, exempelvis 1, 2 eller 3 </small>
-                    </div>
-
-                    <div className="form-group">
                         <label>HTML Text</label>
                         <textarea col="5" rows="5" type="text" className="form-control" onChange={this.setHtmlText}></textarea>
                         <small>Konvertera PDF texten till HTML online och klistra in resultatet här.</small>
@@ -133,28 +126,32 @@ export default class TaskMenu extends React.Component {
     }
 
     setHtmlText(event){htmlText = event.target.value;}
-    setTaskId(event){taskId = event.target.value;}
+    //setTaskId(event){taskId = event.target.value;}
 
     componentDidMount() {
         this.mounted = true;
-        this.getData();
+        this.getChaptersData();
     }
 
     componentWillUnmount() {
         this.mounted = false;
     }
 
-    async getData() {
+    async getChaptersData() {
         console.log("get data called");
 
-        const snap = await db.collection("chapters").doc("portals").get();
-        const doc = snap.data();
+        db.collection("chapters").doc("portals").onSnapshot((snap)=>{
+            console.log(snap);
+            const doc = snap.data();
+            if (doc) {
+                if (this.mounted) {
+                    this.setState({
+                        chapters: doc.list
+                    });
+                }
+            } 
+        });
 
-        if (this.mounted) {
-            this.setState({
-                chapters: doc.list
-            });
-        }
     }
 
 
@@ -185,5 +182,36 @@ export default class TaskMenu extends React.Component {
     getChaptersList() {
         console.log(this.state.chapters);
         return this.state.chapters;
+    }
+
+    deleteDocument(chapId){
+        db.runTransaction(async(t)=>{
+            const chapterRef = db.collection("chapters").doc(chapId);
+            const portalsRef = db.collection("chapters").doc("portals");
+            const portalsDoc = await t.get(portalsRef);
+            const portal = portalsDoc.data();
+    
+            let targetIndex;
+    
+            portal.list.forEach((item, index) => {
+                if(item.id === chapId)
+                {
+                    console.log(item.id);
+                    targetIndex = index;
+                    return;
+                }
+            });
+    
+            if(targetIndex !== null)
+            {
+                portal.list.splice(targetIndex, 1);
+                
+            }
+    
+    
+    
+            t.delete(chapterRef);
+            t.update(portalsRef, portal);
+        });
     }
 }
