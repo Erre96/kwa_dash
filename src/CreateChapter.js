@@ -157,11 +157,11 @@ class CreateChapter extends React.Component {
                                 <Row className="justify-content-center" xs='6'>
                                     <Card style={{ padding: 25 }}>
                                         <div>
-                                            <div><label>First Video Title</label></div>
+                                            <div><label>Second Video Title</label></div>
                                             <input type="text" onChange={this.handleInputchange} name='secondVideoTitle' value={secondVideoTitle}></input>
                                         </div>
                                         <div>
-                                            <p>Second Video (Link)</p>
+                                            <p>Second Video Link</p>
                                             <textarea rows="1" cols="60" type="text" onChange={this.handleInputchange} name="secondVideoLink"></textarea>
                                         </div>
                                     </Card>

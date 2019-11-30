@@ -28,7 +28,7 @@ export default class TaskMenu extends React.Component {
     writeToFirebase() {
         console.log(this.state.chosenChapterId);
         let task = {
-            text: htmlText,
+            bodyHtml: htmlText,
             id: 5,
             done: false
         }
@@ -117,7 +117,7 @@ export default class TaskMenu extends React.Component {
                         <small>Konvertera PDF texten till HTML online och klistra in resultatet här.</small>
                         <br />
                         <small>Här är en bra länk för att göra detta</small><br />
-                        <a className="form-control" href="https://www.froala.com/online-html-editor">https://www.froala.com/online-html-editor</a>
+                        <a className="form-control" href="http://suneditor.com/sample/index.html">http://suneditor.com/sample/index.html</a>
                         <Button onClick={this.writeToFirebase} >Lägg till övning</Button>
                     </div>
                 </Container>
