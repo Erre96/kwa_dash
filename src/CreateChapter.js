@@ -71,6 +71,7 @@ class CreateChapter extends React.Component {
             subHead: this.state.subHead,
             premium: this.state.premium,
             id: id,
+            taskIds: [],
         }
 
         portalsRef.get()
