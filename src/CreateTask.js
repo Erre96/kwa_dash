@@ -38,7 +38,7 @@ class CreateTask extends React.Component {
         })
     }
 
-    downloadList(taskId) {
+    addTaskIdToPortals(taskId) {
         var docRef = db.collection("chapters").doc("portals");
 
         docRef.get().then(function(doc) {
@@ -90,10 +90,10 @@ class CreateTask extends React.Component {
             time: this.state.time,
         });
         this.writeToChapter(taskId);
-        this.downloadList(taskId);
+        this.addTaskIdToPortals(taskId);
     }
     )}
-    
+
     writeToChapter(taskId) {
 
         let taskData = {
