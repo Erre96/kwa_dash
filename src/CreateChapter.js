@@ -1,9 +1,9 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Button, Row, Col, Form, Alert, Container } from "react-bootstrap";
+import { Card, Button, Row, Col, Form, Container } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
-import {chapterData, targetInfo} from './ChapterMenu';
+import {Link, BrowserRouter as Router } from 'react-router-dom'
 
 var chapterAdded = false;
 
@@ -48,7 +48,7 @@ class CreateChapter extends React.Component {
 
         let videos = [];
 
-        if (this.state.firstVideoTitle != null && this.state.firstVideoLink != null) {
+        if (this.state.firstVideoTitle !== undefined && this.state.firstVideoLink !== undefined) {
             videos.push({ title: this.state.firstVideoTitle, url: this.state.firstVideoLink })
         }
 
@@ -83,7 +83,6 @@ class CreateChapter extends React.Component {
                     })
                         .then(function () {
                             console.log("Document successfully updated!");
-                            this.WriteChapter(portalData);
                         })
                         .catch(function (error) {
                             // The document probably doesn't exist.
@@ -95,7 +94,6 @@ class CreateChapter extends React.Component {
                     })
                         .then(function () {
                             console.log("Document successfully created!");
-                            this.WriteChapter(portalData);
                         })
                         .catch(function (error) {
                             // The document probably doesn't exist.
@@ -171,7 +169,9 @@ class CreateChapter extends React.Component {
                             </div>
 
                             <div className="mt-3">
-                                <Button onClick={this.WriteChapter}>Add</Button>
+                                <Link to='alert'>
+                                    <Button onClick={this.WriteChapter}>Add</Button>
+                                </Link>
                             </div>
 
                         </Col>
@@ -180,22 +180,6 @@ class CreateChapter extends React.Component {
             </Container>
         )
     }
-}
-
-function sendMessage() {
-    return (
-        <Alert variant="success">
-            <Alert.Heading>You succesfully created a new chapter!</Alert.Heading>
-            <p>
-                Good job.
-        </p>
-            <hr />
-            <p className="mb-0">
-                Whenever you need to, be sure to use margin utilities to keep things nice
-                and tidy.
-        </p>
-        </Alert>
-    )
 }
 
 export default CreateChapter

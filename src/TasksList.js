@@ -12,29 +12,11 @@ export class TasksList extends React.Component {
         super(props);
 
         this.goToTaskCreation = this.goToTaskCreation.bind(this);
-        //this.writeToFirebase = this.writeToFirebase.bind(this)
-
 
         this.state = {
             tasks: [],
         }
     }
-    /*
-        doShit() {
-            db.collection('chapters').doc(targetInfo.chosenChapterId)
-                .get().then(
-                    doc => {
-                        if (doc.exists) {
-                            db.collection('chapters').doc(targetInfo.chosenChapterId).collection('tasks').get().
-                                then(sub => {
-                                    if (sub.docs.length > 0) {
-                                        console.log('subcollection exists');
-                                    }
-                                });
-                        }
-                    });
-            this.setState({});
-        }*/
 
     goToTaskCreation = (event) => {
         this.setOpenChapter();
@@ -91,33 +73,35 @@ export class TasksList extends React.Component {
         if (this.state.tasks !== undefined) {
             return (
 
-                <Container className='text-center'>
-                    <h3>{targetInfo.chapterTitle}</h3>
-                    <h5>{targetInfo.chapterSubHead}</h5>
-                    {
-                        this.state.tasks.map((task, index) => {
-                            return (
-                                <Card style={{ padding: 10 }} className="mt-3" key={index} >
-                                    <Row>
-                                        <Col>
-                                            <p>{task.subHead}</p>
-                                        </Col>
+                <div style={{ marginTop: 15 }}>
+                    <Container className='text-center'>
+                        <h3>{targetInfo.chapterTitle}</h3>
+                        <h5>{targetInfo.chapterSubHead}</h5>
+                        {
+                            this.state.tasks.map((task, index) => {
+                                return (
+                                    <Card style={{ padding: 10 }} className="mt-3" key={index} >
+                                        <Row>
+                                            <Col>
+                                                <p>{task.subHead}</p>
+                                            </Col>
 
-                                        <Col>
-                                            <Button>Redigera</Button>
-                                        </Col>
-                                    </Row>
-                                </Card>
-                            )
-                        })
-                    }
-                    <AddButton></AddButton>
-                </Container>
+                                            <Col>
+                                                <Button>Redigera</Button>
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                )
+                            })
+                        }
+                        <AddButton></AddButton>
+                    </Container>
+                </div>
             )
         }
         else
             return (
-                <div className="text-center">
+                <div style={{marginTop: 15}}className="text-center">
                     <h3>{targetInfo.chapterTitle}</h3>
                     <h5>{targetInfo.chapterSubHead}</h5>
                     <AddButton></AddButton>

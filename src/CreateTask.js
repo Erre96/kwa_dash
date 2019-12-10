@@ -6,6 +6,7 @@ import firebase from "firebase";
 import { targetInfo } from './ChapterMenu';
 
 
+
 class CreateTask extends React.Component {
     constructor(props) {
         super(props)
@@ -63,7 +64,7 @@ class CreateTask extends React.Component {
                 list[index] = indexUpdate;
                 console.log("done with task id update   "+list[index]);
 
-                db.collection("chapters").doc("portals").set({list
+                db.collection("chapters").doc("portals").update({list
                 });
                 
 
@@ -73,8 +74,7 @@ class CreateTask extends React.Component {
             }
         }).catch(function(error) {
             console.log("Error getting document:", error);
-        });
-        
+        });  
     }
 
     writeToSubCollection() {

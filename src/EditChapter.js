@@ -4,6 +4,7 @@ import { Card, Button, Row, Col, Form, Alert, Container } from "react-bootstrap"
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import {chapterData, targetInfo} from './ChapterMenu';
+import {Link, BrowserRouter as Router } from 'react-router-dom'
 
 class EditChapter extends React.Component {
     constructor(props) {
@@ -11,7 +12,7 @@ class EditChapter extends React.Component {
 
         this.handleInputchange = this.handleInputchange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.writeToPortal = this.writeToPortal.bind(this);
+        this.updateListInPortals = this.updateListInPortals.bind(this);
         this.WriteChapter = this.WriteChapter.bind(this);
 
         this.state = {
@@ -90,7 +91,7 @@ class EditChapter extends React.Component {
 
         let videos = [];
 
-        if (this.state.firstVideoTitle != null && this.state.firstVideoLink != null) {
+        if (this.state.firstVideoTitle !== undefined && this.state.firstVideoLink !== undefined) {
             videos.push({ title: this.state.firstVideoTitle, url: this.state.firstVideoLink })
         }
 
@@ -101,50 +102,51 @@ class EditChapter extends React.Component {
             subHead: this.state.subHead,
             videos: videos,
         });
-        this.writeToPortal(chapterData.id);
+        this.updateListInPortals();
         this.setState({})
     }
 
-    writeToPortal(id) {
-        var portalsRef = db.collection("chapters").doc("portals");
+    async updateListInPortals() {
 
-        let portalData = {
-            title: this.state.title,
-            subHead: this.state.subHead,
-            premium: this.state.premium,
-            id: id,
-            taskIds: [],
+        let change = {
+            premium : this.state.premium,
+            subHead : this.state.subHead,
+            title : this.state.title,
         }
 
-        portalsRef.get()
-            .then((docSnapshot) => {
-                if (docSnapshot.exists) {
-                    portalsRef.update({
-                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully updated!");
-                            this.WriteChapter(portalData);
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                } else {
-                    portalsRef.set({
-                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully created!");
-                            this.WriteChapter(portalData);
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
+        var docRef = db.collection("chapters").doc("portals");
+        await docRef.get().then(function(doc) {
+            if (doc.exists) {
+                console.log("Document data:", doc.data());
+
+                let data = doc.data();
+                let list = data.list;
+                let index = targetInfo.chapterIndex;
+
+                let indexUpdate = {
+                    id: list[index].id,
+                    premium: change.premium,
+                    subHead: change.subHead,
+                    taskIds : list[index].taskIds,
+                    title: change.title,
                 }
-            });
+                
+                list[index] = indexUpdate;
+                console.log("done with task id update   "+list[index]);
+
+                db.collection("chapters").doc("portals").update({list
+                });
+                
+
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });  
     }
+
 
     render() {
         const { title, subHead, premium, bodyText, firstVideoTitle, secondVideoTitle, firstVideoLink, secondVideoLink, bodyTitle } = this.state
@@ -212,7 +214,7 @@ class EditChapter extends React.Component {
                             </div>
 
                             <div className="mt-3">
-                                <Button onClick={this.WriteChapter}>Update Chapter</Button>
+                                    <Button onClick={this.WriteChapter}>Update Chapter</Button>
                             </div>
                         </Col>
                     </Row>
@@ -220,22 +222,6 @@ class EditChapter extends React.Component {
             </Container>
         )
     }
-}
-
-export function sendMessage() {
-    return (
-        <Alert variant="success">
-            <Alert.Heading>You succesfully created a new chapter!</Alert.Heading>
-            <p>
-                Good job.
-        </p>
-            <hr />
-            <p className="mb-0">
-                Whenever you need to, be sure to use margin utilities to keep things nice
-                and tidy.
-        </p>
-        </Alert>
-    )
 }
 
 export default EditChapter

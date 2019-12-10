@@ -64,11 +64,11 @@ export default class ChapterMenu extends React.Component {
 
                                     <Col>
                                         <Link to="/TasksList">
-                                            <Button style={{ marginLeft: 10 }} value={chap.id} onClick={() => (this.routeToTaskList(chap.id, chap.title, chap.subHead, index))}>Övningssida</Button>
+                                            <Button style={{ marginLeft: 10 }} value={chap.id} onClick={() => (this.setTargetInfo(chap.id, chap.title, chap.subHead, index))}>Övningssida</Button>
                                         </Link>
 
                                         <Link to="/EditChapter">
-                                            <   Button style={{ marginLeft: 10, backgroundColor: ('green') }} value={chap.id} onClick={() => (this.setChapterData(chap))}>Redigera</Button>
+                                            <   Button style={{ marginLeft: 10, backgroundColor: ('green') }} value={chap.id} onClick={() => (this.setChapterData(chap, index))}>Redigera</Button>
                                         </Link>
 
                                         <Button style={{ marginLeft: 10, backgroundColor: ('red') }} value={chap.id} onClick={() => (this.deleteDocument(chap.id))}>Ta bort</Button>
@@ -83,7 +83,17 @@ export default class ChapterMenu extends React.Component {
         )
     }
 
-    setChapterData(chapter) {
+    
+    setTargetInfo(chapId, title, subHead, index) {
+        targetInfo.chosenChapterId = chapId;
+        targetInfo.chapterTitle = title;
+        targetInfo.chapterSubHead = subHead;
+        targetInfo.chapterIndex = index;
+    }
+
+    setChapterData(chapter, index) {
+        targetInfo.chapterIndex = index;
+        
         chapterData.id = chapter.id;
         chapterData.title = chapter.title;
         chapterData.subHead = chapter.subHead;
@@ -122,14 +132,6 @@ export default class ChapterMenu extends React.Component {
     getChaptersList() {
         console.log(this.state.chapters);
         return this.state.chapters;
-    }
-
-    routeToTaskList(chapId, title, subHead, index) {
-        targetInfo.chosenChapterId = chapId;
-        targetInfo.chapterTitle = title;
-        targetInfo.chapterSubHead = subHead;
-        targetInfo.chapterIndex = index;
-
     }
 
     deleteDocument(chapId) {
