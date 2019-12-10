@@ -5,8 +5,6 @@ import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import { targetInfo } from './ChapterMenu';
 
-var chapterAdded = false;
-
 
 class CreateTask extends React.Component {
     constructor(props) {
@@ -37,6 +35,7 @@ class CreateTask extends React.Component {
             [event.target.name]: !this.state.premium
         })
     }
+    
 
     addTaskIdToPortals(taskId) {
         var docRef = db.collection("chapters").doc("portals");

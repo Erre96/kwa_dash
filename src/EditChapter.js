@@ -5,10 +5,7 @@ import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import {chapterData, targetInfo} from './ChapterMenu';
 
-var chapterAdded = false;
-
-
-class CreateChapter extends React.Component {
+class EditChapter extends React.Component {
     constructor(props) {
         super(props)
 
@@ -30,6 +27,52 @@ class CreateChapter extends React.Component {
         }
     }
 
+    async getSpecificChapterdata(id) {
+        let loaded = false;
+    
+        const snap = await db.collection("chapters").doc(id).get();
+        const doc = snap.data();
+    
+        if (doc) {
+            /* un-green this if these varaibles need to be set for some reason later
+            chapterData.bodyTitle = doc.title;
+            chapterData.bodyText = doc.bodyText;
+            chapterData.videos = doc.videos;*/
+
+            this.state.bodyTitle = doc.bodyTitle;
+            this.state.bodyText = doc.bodyText;
+
+            if(doc.videos[0] !== undefined)
+            {
+                this.state.firstVideoLink = doc.videos[0].url;
+                this.state.firstVideoTitle = doc.videos[0].title;
+            }
+
+            if(doc.videos[1] !== undefined)
+            {
+                this.state.secondVideoLink = doc.videos[1].url;
+                this.state.secondVideoTitle = doc.videos[1].title;
+            }
+            console.log('hej3.41    ' + chapterData.bodyText);
+            this.setState({});
+        }
+    }
+
+    componentDidMount()
+    {
+        if(chapterData.title !== undefined)
+        {
+            console.log("hej1.44    "+chapterData.title);
+            this.mounted = true;
+            this.state.title = chapterData.title;
+            this.state.subHead = chapterData.subHead;
+            this.state.premium = chapterData.premium;
+            this.state.bodyTitle = chapterData.bodyTitle;
+            this.state.bodyText = chapterData.bodyText;
+            this.getSpecificChapterdata(chapterData.id);
+        }
+    }
+
     handleInputchange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
@@ -43,8 +86,7 @@ class CreateChapter extends React.Component {
     }
 
     async WriteChapter() {
-        var idRef = db.collection("chapters").doc();
-        let id = idRef.id;
+        var idRef = db.collection("chapters").doc(chapterData.id);
 
         let videos = [];
 
@@ -52,15 +94,14 @@ class CreateChapter extends React.Component {
             videos.push({ title: this.state.firstVideoTitle, url: this.state.firstVideoLink })
         }
 
-        idRef.set({
+        idRef.update({
             title: this.state.title,
             bodyTitle: this.state.bodyTitle,
             bodyText: this.state.bodyText,
             subHead: this.state.subHead,
             videos: videos,
         });
-        this.writeToPortal(id);
-        chapterAdded = true;
+        this.writeToPortal(chapterData.id);
         this.setState({})
     }
 
@@ -171,9 +212,8 @@ class CreateChapter extends React.Component {
                             </div>
 
                             <div className="mt-3">
-                                <Button onClick={this.WriteChapter}>Add</Button>
+                                <Button onClick={this.WriteChapter}>Update Chapter</Button>
                             </div>
-
                         </Col>
                     </Row>
                 </Card>
@@ -182,7 +222,7 @@ class CreateChapter extends React.Component {
     }
 }
 
-function sendMessage() {
+export function sendMessage() {
     return (
         <Alert variant="success">
             <Alert.Heading>You succesfully created a new chapter!</Alert.Heading>
@@ -198,4 +238,4 @@ function sendMessage() {
     )
 }
 
-export default CreateChapter
+export default EditChapter

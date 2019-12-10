@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Button, Row, Col, Form, Navbar } from "react-bootstrap";
 import CreateChapter from './CreateChapter'
+import EditChapter from './EditChapter'
 import ChapterMenu from './ChapterMenu'
 import TasksList from './TasksList'
 import CreateTask from './CreateTask'
@@ -17,16 +18,17 @@ export default class Home extends React.Component {
                         <Row className="text-center">
                             <h3 style={{color:"white", marginLeft:30}}>Kärlekstanken Dashboard</h3>
                             <Link style={{ color: "white", marginLeft:30 }} to="/createChapter">Skapa Avsnitt</Link>
-                            <Link style={{ color: "white", marginLeft:30 }} to="/ChapterMenu">Avsnittssida</Link>
+                            <Link style={{ color: "white", marginLeft:30 }} to="/chapterMenu">Avsnittssida</Link>
                         </Row>
                     </Navbar>
                     <Container>
 
                         <div>
-                            <Route path="/CreateChapter" component={CreateChapter} />
-                            <Route path="/ChapterMenu" component={ChapterMenu} />
-                            <Route path="/TasksList" component={TasksList} />
-                            <Route path="/CreateTask" component={CreateTask} />
+                            <Route path="/createChapter" component={CreateChapter} />
+                            <Route path="/chapterMenu" component={ChapterMenu} />
+                            <Route path="/tasksList" component={TasksList} />
+                            <Route path="/createTask" component={CreateTask} />
+                            <Route path="/editChapter" component={EditChapter} />
                             <div>
 
                             </div>
