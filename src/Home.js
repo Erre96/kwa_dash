@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Button, Row, Navbar } from "react-bootstrap";
 import CreateChapter from './CreateChapter'
 import EditChapter from './EditChapter'
+import EditTask from './EditTask'
 import ChapterMenu from './ChapterMenu'
 import TasksList from './TasksList'
 import CreateTask from './CreateTask'
@@ -31,6 +32,7 @@ export default class Home extends React.Component {
                             <Route path="/tasksList" component={TasksList} />
                             <Route path="/createTask" component={CreateTask} />
                             <Route path="/editChapter" component={EditChapter} />
+                            <Route path="/editTask" component={EditTask} />
                             <Route path="/alert" component={AlertPage} />
                             <div>
 

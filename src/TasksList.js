@@ -87,7 +87,9 @@ export class TasksList extends React.Component {
                                             </Col>
 
                                             <Col>
+                                            <Link to='editTask'>
                                                 <Button>Redigera</Button>
+                                            </Link>
                                             </Col>
                                         </Row>
                                     </Card>
