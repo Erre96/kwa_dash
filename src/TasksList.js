@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { targetInfo } from './ChapterMenu';
 import { db } from './FirebaseData';
-import { Container, Button, Row, Col, Card, Form, Input } from "react-bootstrap";
-import { Link, BrowserRouter as Router } from 'react-router-dom'
+import { Container, Button, Row, Col, Card} from "react-bootstrap";
+import { Link, BrowserRouter as Router } from 'react-router-dom';
 
-var htmlText;
-
+export function taskData(){
+    let id = '';
+}
 
 export class TasksList extends React.Component {
     constructor(props) {
@@ -18,6 +19,11 @@ export class TasksList extends React.Component {
         }
     }
 
+    setTaskId(id, index)
+    {
+        targetInfo.taskIndex = index;
+        taskData.id = id;
+    }
     goToTaskCreation = (event) => {
         this.setOpenChapter();
     }
@@ -35,9 +41,6 @@ export class TasksList extends React.Component {
             });
         }
     }
-
-    setHtmlText(event) { htmlText = event.target.value; }
-    //setTaskId(event){taskId = event.target.value;}
 
     componentDidMount() {
         if (targetInfo.chosenChapterId !== null) {
@@ -88,7 +91,7 @@ export class TasksList extends React.Component {
 
                                             <Col>
                                             <Link to='editTask'>
-                                                <Button>Redigera</Button>
+                                                <Button onClick={() => (this.setTaskId(task.id, index))}>Redigera</Button>
                                             </Link>
                                             </Col>
                                         </Row>

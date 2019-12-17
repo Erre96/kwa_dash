@@ -4,6 +4,7 @@ import { Card, Button, Row, Col, Form, Alert, Container } from "react-bootstrap"
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import { targetInfo } from './ChapterMenu';
+import { taskData } from './TasksList';
 
 
 
@@ -12,8 +13,6 @@ class EditTask extends React.Component {
         super(props)
 
         this.handleInputchange = this.handleInputchange.bind(this);
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.writeToPortal = this.writeToPortal.bind(this);
         this.writeToSubCollection = this.writeToSubCollection.bind(this);
 
         this.state = {
@@ -31,40 +30,72 @@ class EditTask extends React.Component {
         })
     }
 
-    handleCheckboxChange = (event) => {
-        this.setState({
-            [event.target.name]: !this.state.premium
-        })
+    componentDidMount() {
+        this.mounted = true;
+        this.getData();
     }
-    
 
-    addTaskIdToPortals(taskId) {
-        var docRef = db.collection("chapters").doc("portals");
+    componentWillUnmount() {
+        this.mounted = false;
+    }
 
-        docRef.get().then(function(doc) {
+    async getData() {
+        if (taskData.id !== undefined && targetInfo.chosenChapterId !== undefined) {
+
+            const snap = await db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc(taskData.id).get();
+            const doc = snap.data();
+            if (doc) {
+                if (this.mounted) {
+                    this.setState({
+                        id: taskData.id,
+                        title: doc.title,
+                        subHead: doc.subHead,
+                        bodyHTML: doc.bodyHTML,
+                        time: doc.time,
+                    });
+                }
+            }
+        }
+    }
+
+    writeToSubCollection() {
+        console.log('hej    '+taskData.id);
+        db.runTransaction(async (t) => {
+            const taskRef = db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc(taskData.id);
+            let taskId = taskRef.id;
+
+            taskRef.update({
+                bodyHTML: this.state.bodyHTML,
+                title: this.state.title,
+                subHead: this.state.subHead,
+                time: this.state.time,
+            });
+            this.writeToChapter(taskId);
+        }
+        )
+    }
+
+    async writeToChapter(taskId) {     
+        let indexUpdate = {
+            title: this.state.title,
+            subHead: this.state.subHead,
+            id: taskId,
+        }
+
+
+        var docRef = db.collection("chapters").doc(targetInfo.chosenChapterId);
+        await docRef.get().then(function(doc) {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
+
                 let data = doc.data();
-                let list = data.list;
-                let index = targetInfo.chapterIndex;
+                let newList = data.tasks;
+                let index = targetInfo.taskIndex;
+                
+                newList[index] = indexUpdate;
+                console.log("done with task id update   "+newList[index]);
 
-                let olderTasks = [];
-                olderTasks = list[index].taskIds;
-
-                let taskIds = olderTasks;
-                taskIds.push(taskId);
-
-                let indexUpdate = {
-                    id: list[index].id,
-                    premium: list[index].premium,
-                    subHead: list[index].subHead,
-                    taskIds : taskIds,
-                    title: list[index].title,
-                }
-                list[index] = indexUpdate;
-                console.log("done with task id update   "+list[index]);
-
-                db.collection("chapters").doc("portals").update({list
+                db.collection("chapters").doc(targetInfo.chosenChapterId).update({newList
                 });
                 
 
@@ -77,101 +108,6 @@ class EditTask extends React.Component {
         });  
     }
 
-    writeToSubCollection() {
-        db.runTransaction(async(t)=>{
-        const taskRef = db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc();
-        let taskId = taskRef.id;
-
-        taskRef.set({
-            bodyHTML: this.state.bodyHTML,
-            title: this.state.title,
-            subHead: this.state.subHead,
-            time: this.state.time,
-        });
-        this.writeToChapter(taskId);
-        this.addTaskIdToPortals(taskId);
-    }
-    )}
-
-    writeToChapter(taskId) {
-
-        let taskData = {
-            bodyHTML: this.state.bodyHTML,
-            title: this.state.title,
-            subHead: this.state.subHead,
-            time: this.state.time,
-            id: taskId
-        }
-
-        const idRef = db.collection("chapters").doc(targetInfo.chosenChapterId);
-        idRef.get()
-            .then((docSnapshot) => {
-                if (docSnapshot.exists) {
-                    idRef.update({
-                        tasks: firebase.firestore.FieldValue.arrayUnion(taskData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully updated!");
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                } else {
-                    idRef.set({
-                        tasks: firebase.firestore.FieldValue.arrayUnion(taskData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully created!");
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                }
-            });
-    }
-
-    writeToPortal(id) {
-        var portalsRef = db.collection("chapters").doc("portals");
-
-        let portalData = {
-            title: this.state.title,
-            subHead: this.state.subHead,
-            premium: this.state.premium,
-            id: id,
-        }
-
-        portalsRef.get()
-            .then((docSnapshot) => {
-                if (docSnapshot.exists) {
-                    portalsRef.update({
-                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully updated!");
-                            this.WriteChapter(portalData);
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                } else {
-                    portalsRef.set({
-                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully created!");
-                            this.WriteChapter(portalData);
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                }
-            });
-    }
-
     render() {
         const { title, subHead, time, bodyHTML } = this.state
         //  console.log(title, subHead,premium, description, videoLink);
@@ -181,31 +117,32 @@ class EditTask extends React.Component {
                 <Card>
                     <Row className="mt-2 justify-content-center">
                         <Col className="text-center">
-                            <h1>Create Task</h1>
-                            <div className="mt-3">
-                                <p>Title of the Task</p>
-                                <input type="text" onChange={this.handleInputchange} name='title' value={title}></input>
-                            </div>
+                            <form onSubmit={this.handleSubmit}>
+                                <h1>Edit Task</h1>
+                                <div className="mt-3">
+                                    <p>Title of the Task</p>
+                                    <input type="text" onChange={this.handleInputchange} name='title' value={title}></input>
+                                </div>
 
-                            <div className="mt-3">
-                                <p>Subhead</p>
-                                <input type="text" onChange={this.handleInputchange} name='subHead' value={subHead}></input>
-                            </div>
+                                <div className="mt-3">
+                                    <p>Subhead</p>
+                                    <input type="text" onChange={this.handleInputchange} name='subHead' value={subHead}></input>
+                                </div>
 
-                            <div className="mt-3">
-                                <p>Estimated Time to finish task</p>
-                                <input type="text" onChange={this.handleInputchange} name='time' value={time}></input>
-                            </div>
+                                <div className="mt-3">
+                                    <p>Estimated Time to finish task</p>
+                                    <input type="text" onChange={this.handleInputchange} name='time' value={time}></input>
+                                </div>
 
-                            <div className="mt-3">
-                                <p>HTML Content</p>
-                                <textarea rows="4" cols="50" type="text" onChange={this.handleInputchange} name="bodyHTML" value={bodyHTML}></textarea>
-                            </div>
+                                <div className="mt-3">
+                                    <p>HTML Content</p>
+                                    <textarea rows="4" cols="50" type="text" onChange={this.handleInputchange} name="bodyHTML" value={bodyHTML}></textarea>
+                                </div>
 
-                            <div className="mt-3">
-                                <Button onClick={this.writeToSubCollection}>Add</Button>
-                            </div>
-
+                                <div className="mt-3">
+                                    <Button onClick={this.writeToSubCollection}>Update</Button>
+                                </div>
+                            </form>
                         </Col>
                     </Row>
                 </Card>

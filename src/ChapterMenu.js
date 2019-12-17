@@ -11,6 +11,7 @@ export function targetInfo() {
     let chapterTitle;
     let chapterSubHead;
     let chapterIndex;
+    let taskIndex;
 }
 
 export function chapterData() {

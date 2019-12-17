@@ -12,8 +12,6 @@ class CreateTask extends React.Component {
         super(props)
 
         this.handleInputchange = this.handleInputchange.bind(this);
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.writeToPortal = this.writeToPortal.bind(this);
         this.writeToSubCollection = this.writeToSubCollection.bind(this);
 
         this.state = {
@@ -28,12 +26,6 @@ class CreateTask extends React.Component {
     handleInputchange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
-        })
-    }
-
-    handleCheckboxChange = (event) => {
-        this.setState({
-            [event.target.name]: !this.state.premium
         })
     }
     
@@ -96,10 +88,8 @@ class CreateTask extends React.Component {
     writeToChapter(taskId) {
 
         let taskData = {
-            bodyHTML: this.state.bodyHTML,
             title: this.state.title,
             subHead: this.state.subHead,
-            time: this.state.time,
             id: taskId
         }
 
@@ -123,46 +113,6 @@ class CreateTask extends React.Component {
                     })
                         .then(function () {
                             console.log("Document successfully created!");
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                }
-            });
-    }
-
-    writeToPortal(id) {
-        var portalsRef = db.collection("chapters").doc("portals");
-
-        let portalData = {
-            title: this.state.title,
-            subHead: this.state.subHead,
-            premium: this.state.premium,
-            id: id,
-        }
-
-        portalsRef.get()
-            .then((docSnapshot) => {
-                if (docSnapshot.exists) {
-                    portalsRef.update({
-                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully updated!");
-                            this.WriteChapter(portalData);
-                        })
-                        .catch(function (error) {
-                            // The document probably doesn't exist.
-                            console.error("Error updating document: ", error);
-                        });
-                } else {
-                    portalsRef.set({
-                        list: firebase.firestore.FieldValue.arrayUnion(portalData)
-                    })
-                        .then(function () {
-                            console.log("Document successfully created!");
-                            this.WriteChapter(portalData);
                         })
                         .catch(function (error) {
                             // The document probably doesn't exist.
