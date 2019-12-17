@@ -71,7 +71,10 @@ export class TasksList extends React.Component {
         return this.state.chapters;
     }
 
-
+    deleteTask(taskId, index)
+    {
+        
+    }
     render() {
         if (this.state.tasks !== undefined) {
             return (
@@ -93,6 +96,9 @@ export class TasksList extends React.Component {
                                             <Link to='editTask'>
                                                 <Button onClick={() => (this.setTaskId(task.id, index))}>Redigera</Button>
                                             </Link>
+                                            </Col>
+                                            <Col>
+                                                <Button onClick={() => (this.deleteTask(task.id, index))}>Redigera</Button>
                                             </Col>
                                         </Row>
                                     </Card>

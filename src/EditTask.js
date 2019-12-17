@@ -64,18 +64,18 @@ class EditTask extends React.Component {
             const taskRef = db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc(taskData.id);
             let taskId = taskRef.id;
 
-            taskRef.update({
+            t.taskRef.update({
                 bodyHTML: this.state.bodyHTML,
                 title: this.state.title,
                 subHead: this.state.subHead,
                 time: this.state.time,
             });
-            this.writeToChapter(taskId);
+            this.writeToChapter(taskId,t);
         }
         )
     }
 
-    async writeToChapter(taskId) {     
+    async writeToChapter(taskId,t) {     
         let indexUpdate = {
             title: this.state.title,
             subHead: this.state.subHead,
@@ -95,7 +95,7 @@ class EditTask extends React.Component {
                 newList[index] = indexUpdate;
                 console.log("done with task id update   "+newList[index]);
 
-                db.collection("chapters").doc(targetInfo.chosenChapterId).update({tasks : newList
+                t.db.collection("chapters").doc(targetInfo.chosenChapterId).update({tasks : newList
                 });
                 
 

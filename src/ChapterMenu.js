@@ -84,7 +84,7 @@ export default class ChapterMenu extends React.Component {
         )
     }
 
-    
+
     setTargetInfo(chapId, title, subHead, index) {
         targetInfo.chosenChapterId = chapId;
         targetInfo.chapterTitle = title;
@@ -94,7 +94,7 @@ export default class ChapterMenu extends React.Component {
 
     setChapterData(chapter, index) {
         targetInfo.chapterIndex = index;
-        
+
         chapterData.id = chapter.id;
         chapterData.title = chapter.title;
         chapterData.subHead = chapter.subHead;
@@ -139,11 +139,16 @@ export default class ChapterMenu extends React.Component {
         db.runTransaction(async (t) => {
             const chapterRef = db.collection("chapters").doc(chapId);
             const portalsRef = db.collection("chapters").doc("portals");
+
             const portalsDoc = await t.get(portalsRef);
+            const chapterDoc = await t.get(chapterRef);
+
             const portal = portalsDoc.data();
+            const chapter = chapterDoc.data();
 
             let targetIndex;
 
+            //searching for the target chapter id in order to remove the correct index in portals:list
             portal.list.forEach((item, index) => {
                 if (item.id === chapId) {
                     console.log(item.id);
@@ -157,7 +162,9 @@ export default class ChapterMenu extends React.Component {
 
             }
 
-
+            chapter.tasks.forEach((item) => {
+                t.delete(chapterRef.collection('tasks').doc(item.id));
+            })
 
             t.delete(chapterRef);
             t.update(portalsRef, portal);
