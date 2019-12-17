@@ -95,7 +95,7 @@ class EditTask extends React.Component {
                 newList[index] = indexUpdate;
                 console.log("done with task id update   "+newList[index]);
 
-                db.collection("chapters").doc(targetInfo.chosenChapterId).update({newList
+                db.collection("chapters").doc(targetInfo.chosenChapterId).update({tasks : newList
                 });
                 
 
