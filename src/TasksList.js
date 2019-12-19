@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { targetInfo } from './ChapterMenu';
+import { targetInfo, chapterData } from './ChapterMenu';
 import { db } from './FirebaseData';
-import { Container, Button, Row, Col, Card} from "react-bootstrap";
+import { Container, Button, Row, Col, Card } from "react-bootstrap";
 import { Link, BrowserRouter as Router } from 'react-router-dom';
 
-export function taskData(){
+export function taskData() {
     let id = '';
 }
 
@@ -19,11 +19,11 @@ export class TasksList extends React.Component {
         }
     }
 
-    setTaskId(id, index)
-    {
+    setTaskId(id, index) {
         targetInfo.taskIndex = index;
         taskData.id = id;
     }
+
     goToTaskCreation = (event) => {
         this.setOpenChapter();
     }
@@ -49,6 +49,10 @@ export class TasksList extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
     async getTasksData() {
         console.log("get data called");
 
@@ -71,10 +75,29 @@ export class TasksList extends React.Component {
         return this.state.chapters;
     }
 
-    deleteTask(taskId, index)
-    {
-        
+    async deleteTask(taskId, index) {
+        db.runTransaction(async (t) => {
+            const chapterRef = db.collection("chapters").doc(targetInfo.chosenChapterId);
+            const portalsRef = db.collection("chapters").doc("portals");
+
+            const portalsDoc = await t.get(portalsRef);
+            const chapterDoc = await t.get(chapterRef);
+
+            const portal = portalsDoc.data();
+            const chapter = chapterDoc.data();
+            
+            const list = portal.list;
+            list[targetInfo.chapterIndex].taskIds.splice(index,1);
+            portal.list = list;
+
+            chapter.tasks.splice(index, 1);
+
+            t.delete(chapterRef.collection('tasks').doc(taskId));
+            t.update(chapterRef, chapter);
+            t.update(portalsRef, portal);
+        });
     }
+
     render() {
         if (this.state.tasks !== undefined) {
             return (
@@ -93,12 +116,12 @@ export class TasksList extends React.Component {
                                             </Col>
 
                                             <Col>
-                                            <Link to='editTask'>
-                                                <Button onClick={() => (this.setTaskId(task.id, index))}>Redigera</Button>
-                                            </Link>
+                                                <Link to='editTask'>
+                                                    <Button onClick={() => (this.setTaskId(task.id, index))}>Redigera</Button>
+                                                </Link>
                                             </Col>
                                             <Col>
-                                                <Button onClick={() => (this.deleteTask(task.id, index))}>Redigera</Button>
+                                                <Button style={{ backgroundColor: ('red') }} onClick={() => (this.deleteTask(task.id, index))}>Ta Bort</Button>
                                             </Col>
                                         </Row>
                                     </Card>
@@ -112,7 +135,7 @@ export class TasksList extends React.Component {
         }
         else
             return (
-                <div style={{marginTop: 15}}className="text-center">
+                <div style={{ marginTop: 15 }} className="text-center">
                     <h3>{targetInfo.chapterTitle}</h3>
                     <h5>{targetInfo.chapterSubHead}</h5>
                     <AddButton></AddButton>
