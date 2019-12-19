@@ -4,6 +4,7 @@ import { Card, Button, Row, Col, Form, Alert, Container } from "react-bootstrap"
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import { targetInfo } from './ChapterMenu';
+import { Link, BrowserRouter as Router } from 'react-router-dom';
 
 
 
@@ -152,7 +153,9 @@ class CreateTask extends React.Component {
                             </div>
 
                             <div className="mt-3">
-                                <Button onClick={this.writeToSubCollection}>Add</Button>
+                                <Link to='TasksList'>
+                                    <Button onClick={this.writeToSubCollection}>Add</Button>
+                                </Link>
                             </div>
 
                         </Col>

@@ -5,6 +5,7 @@ import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import { targetInfo } from './ChapterMenu';
 import { taskData } from './TasksList';
+import { Link, BrowserRouter as Router } from 'react-router-dom';
 
 
 
@@ -138,7 +139,9 @@ class EditTask extends React.Component {
                                 </div>
 
                                 <div className="mt-3">
-                                    <Button onClick={this.writeToSubCollection}>Update</Button>
+                                    <Link to='TasksList'>
+                                        <Button onClick={this.writeToSubCollection}>Update</Button>
+                                    </Link>
                                 </div>
                             </form>
                         </Col>
