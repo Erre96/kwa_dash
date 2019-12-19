@@ -28,12 +28,12 @@ class CreateTask extends React.Component {
             [event.target.name]: event.target.value
         })
     }
-    
+
 
     addTaskIdToPortals(taskId) {
         var docRef = db.collection("chapters").doc("portals");
 
-        docRef.get().then(function(doc) {
+        docRef.get().then(function (doc) {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
                 let data = doc.data();
@@ -50,27 +50,27 @@ class CreateTask extends React.Component {
                     id: list[index].id,
                     premium: list[index].premium,
                     subHead: list[index].subHead,
-                    taskIds : taskIds,
+                    taskIds: taskIds,
                     title: list[index].title,
                 }
                 list[index] = indexUpdate;
-                console.log("done with task id update   "+list[index]);
+                console.log("done with task id update   " + list[index]);
 
-                db.collection("chapters").doc("portals").update({list
+                db.collection("chapters").doc("portals").update({
+                    list
                 });
-                
+
 
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log("Error getting document:", error);
-        });  
+        });
     }
 
     writeToSubCollection() {
-        db.runTransaction(async(t)=>{
         const taskRef = db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc();
         let taskId = taskRef.id;
 
@@ -83,7 +83,6 @@ class CreateTask extends React.Component {
         this.writeToChapter(taskId);
         this.addTaskIdToPortals(taskId);
     }
-    )}
 
     writeToChapter(taskId) {
 

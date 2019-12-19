@@ -69,7 +69,7 @@ export default class ChapterMenu extends React.Component {
                                         </Link>
 
                                         <Link to="/EditChapter">
-                                            <   Button style={{ marginLeft: 10, backgroundColor: ('green') }} value={chap.id} onClick={() => (this.setChapterData(chap, index))}>Redigera</Button>
+                                            <Button style={{ marginLeft: 10, backgroundColor: ('green') }} value={chap.id} onClick={() => (this.setChapterData(chap, index))}>Redigera</Button>
                                         </Link>
 
                                         <Button style={{ marginLeft: 10, backgroundColor: ('red') }} value={chap.id} onClick={() => (this.deleteDocument(chap.id))}>Ta bort</Button>

@@ -59,23 +59,20 @@ class EditTask extends React.Component {
     }
 
     writeToSubCollection() {
-        console.log('hej    '+taskData.id);
-        db.runTransaction(async (t) => {
-            const taskRef = db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc(taskData.id);
-            let taskId = taskRef.id;
+        console.log('hej    ' + taskData.id);
+        const taskRef = db.collection("chapters").doc(targetInfo.chosenChapterId).collection('tasks').doc(taskData.id);
+        let taskId = taskRef.id;
 
-            t.taskRef.update({
-                bodyHTML: this.state.bodyHTML,
-                title: this.state.title,
-                subHead: this.state.subHead,
-                time: this.state.time,
-            });
-            this.writeToChapter(taskId,t);
-        }
-        )
+        taskRef.update({
+            bodyHTML: this.state.bodyHTML,
+            title: this.state.title,
+            subHead: this.state.subHead,
+            time: this.state.time,
+        });
+        this.writeToChapter(taskId);
     }
 
-    async writeToChapter(taskId,t) {     
+    async writeToChapter(taskId) {
         let indexUpdate = {
             title: this.state.title,
             subHead: this.state.subHead,
@@ -84,28 +81,29 @@ class EditTask extends React.Component {
 
 
         var docRef = db.collection("chapters").doc(targetInfo.chosenChapterId);
-        await docRef.get().then(function(doc) {
+        await docRef.get().then(function (doc) {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
 
                 let data = doc.data();
                 let newList = data.tasks;
                 let index = targetInfo.taskIndex;
-                
-                newList[index] = indexUpdate;
-                console.log("done with task id update   "+newList[index]);
 
-                t.db.collection("chapters").doc(targetInfo.chosenChapterId).update({tasks : newList
+                newList[index] = indexUpdate;
+                console.log("done with task id update   " + newList[index]);
+
+                docRef.update({
+                    tasks: newList
                 });
-                
+
 
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log("Error getting document:", error);
-        });  
+        });
     }
 
     render() {

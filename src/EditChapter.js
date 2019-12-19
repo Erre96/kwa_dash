@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Button, Row, Col, Form, Alert, Container } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
-import {chapterData, targetInfo} from './ChapterMenu';
-import {Link, BrowserRouter as Router } from 'react-router-dom'
+import { chapterData, targetInfo } from './ChapterMenu';
+import { Link, BrowserRouter as Router } from 'react-router-dom'
 
 class EditChapter extends React.Component {
     constructor(props) {
@@ -30,10 +30,10 @@ class EditChapter extends React.Component {
 
     async getSpecificChapterdata(id) {
         let loaded = false;
-    
+
         const snap = await db.collection("chapters").doc(id).get();
         const doc = snap.data();
-    
+
         if (doc) {
             /* un-green this if these varaibles need to be set for some reason later
             chapterData.bodyTitle = doc.title;
@@ -43,14 +43,12 @@ class EditChapter extends React.Component {
             this.state.bodyTitle = doc.bodyTitle;
             this.state.bodyText = doc.bodyText;
 
-            if(doc.videos[0] !== undefined)
-            {
+            if (doc.videos[0] !== undefined) {
                 this.state.firstVideoLink = doc.videos[0].url;
                 this.state.firstVideoTitle = doc.videos[0].title;
             }
 
-            if(doc.videos[1] !== undefined)
-            {
+            if (doc.videos[1] !== undefined) {
                 this.state.secondVideoLink = doc.videos[1].url;
                 this.state.secondVideoTitle = doc.videos[1].title;
             }
@@ -59,11 +57,9 @@ class EditChapter extends React.Component {
         }
     }
 
-    componentDidMount()
-    {
-        if(chapterData.title !== undefined)
-        {
-            console.log("hej1.44    "+chapterData.title);
+    componentDidMount() {
+        if (chapterData.title !== undefined) {
+            console.log("hej1.44    " + chapterData.title);
             this.mounted = true;
             this.state.title = chapterData.title;
             this.state.subHead = chapterData.subHead;
@@ -109,13 +105,13 @@ class EditChapter extends React.Component {
     async updateListInPortals() {
 
         let change = {
-            premium : this.state.premium,
-            subHead : this.state.subHead,
-            title : this.state.title,
+            premium: this.state.premium,
+            subHead: this.state.subHead,
+            title: this.state.title,
         }
 
         var docRef = db.collection("chapters").doc("portals");
-        await docRef.get().then(function(doc) {
+        await docRef.get().then(function (doc) {
             if (doc.exists) {
                 console.log("Document data:", doc.data());
 
@@ -127,24 +123,25 @@ class EditChapter extends React.Component {
                     id: list[index].id,
                     premium: change.premium,
                     subHead: change.subHead,
-                    taskIds : list[index].taskIds,
+                    taskIds: list[index].taskIds,
                     title: change.title,
                 }
-                
-                list[index] = indexUpdate;
-                console.log("done with task id update   "+list[index]);
 
-                db.collection("chapters").doc("portals").update({list
+                list[index] = indexUpdate;
+                console.log("done with task id update   " + list[index]);
+
+                db.collection("chapters").doc("portals").update({
+                    list
                 });
-                
+
 
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log("Error getting document:", error);
-        });  
+        });
     }
 
 
@@ -214,7 +211,9 @@ class EditChapter extends React.Component {
                             </div>
 
                             <div className="mt-3">
+                                <Link to='ChapterMenu'>
                                     <Button onClick={this.WriteChapter}>Update Chapter</Button>
+                                </Link>
                             </div>
                         </Col>
                     </Row>
