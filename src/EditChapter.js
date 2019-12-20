@@ -87,8 +87,12 @@ class EditChapter extends React.Component {
 
         let videos = [];
 
-        if (this.state.firstVideoTitle !== undefined && this.state.firstVideoLink !== undefined) {
+        if (this.state.firstVideoTitle !== undefined || this.state.firstVideoLink !== undefined) {
             videos.push({ title: this.state.firstVideoTitle, url: this.state.firstVideoLink })
+        }
+        
+        if (this.state.secondVideoTitle !== undefined || this.state.secondVideoLink !== undefined) {
+            videos.push({ title: this.state.secondVideoTitle, url: this.state.secondVideoLink })
         }
 
         idRef.update({

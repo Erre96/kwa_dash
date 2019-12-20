@@ -149,7 +149,7 @@ class CreateTask extends React.Component {
 
                             <div className="mt-3">
                                 <p>HTML Content</p>
-                                <textarea rows="4" cols="50" type="text" onChange={this.handleInputchange} name="bodyHTML" value={bodyHTML}></textarea>
+                                <textarea rows="10" cols="50" type="text" onChange={this.handleInputchange} name="bodyHTML" value={bodyHTML}></textarea>
                             </div>
 
                             <div className="mt-3">
