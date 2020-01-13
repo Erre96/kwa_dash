@@ -52,6 +52,10 @@ class CreateChapter extends React.Component {
             videos.push({ title: this.state.firstVideoTitle, url: this.state.firstVideoLink })
         }
 
+        if (this.state.secondVideoTitle !== undefined && this.state.secondVideoLink !== undefined) {
+            videos.push({ title: this.state.secondVideoTitle, url: this.state.secondVideoLink })
+        }
+
         idRef.set({
             title: this.state.title,
             bodyTitle: this.state.bodyTitle,

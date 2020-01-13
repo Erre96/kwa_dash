@@ -162,9 +162,12 @@ export default class ChapterMenu extends React.Component {
 
             }
 
-            chapter.tasks.forEach((item) => {
-                t.delete(chapterRef.collection('tasks').doc(item.id));
-            })
+            if(chapter.tasks !== undefined)
+            {
+                chapter.tasks.forEach((item) => {
+                    t.delete(chapterRef.collection('tasks').doc(item.id));
+                })
+            }
 
             t.delete(chapterRef);
             t.update(portalsRef, portal);
