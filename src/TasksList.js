@@ -85,9 +85,9 @@ export class TasksList extends React.Component {
 
             const portal = portalsDoc.data();
             const chapter = chapterDoc.data();
-            
+
             const list = portal.list;
-            list[targetInfo.chapterIndex].taskIds.splice(index,1);
+            list[targetInfo.chapterIndex].taskIds.splice(index, 1);
             portal.list = list;
 
             chapter.tasks.splice(index, 1);
@@ -109,10 +109,12 @@ export class TasksList extends React.Component {
                         {
                             this.state.tasks.map((task, index) => {
                                 return (
-                                    <Card style={{ padding: 10 }} className="mt-3" key={index} >
+                                    <Card style={{ padding: 10 }} className='mt-5 justify-content-center' key={index} >
                                         <Row>
                                             <Col>
+                                                <h5>{task.title}</h5>
                                                 <p>{task.subHead}</p>
+
                                             </Col>
 
                                             <Col>

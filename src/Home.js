@@ -8,7 +8,9 @@ import ChapterMenu from './ChapterMenu'
 import TasksList from './TasksList'
 import CreateTask from './CreateTask'
 import AlertPage from './AlertPage'
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
+import Login from './Login'
+
+import { Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom'
 
 
 export default class Home extends React.Component {
@@ -27,6 +29,9 @@ export default class Home extends React.Component {
                     <Container>
 
                         <div>
+                            <Route path='/'>
+                                <Redirect to="/login"/>
+                            </Route>
                             <Route path="/createChapter" component={CreateChapter} />
                             <Route path="/chapterMenu" component={ChapterMenu} />
                             <Route path="/tasksList" component={TasksList} />
@@ -34,6 +39,7 @@ export default class Home extends React.Component {
                             <Route path="/editChapter" component={EditChapter} />
                             <Route path="/editTask" component={EditTask} />
                             <Route path="/alert" component={AlertPage} />
+                            <Route path="/login" component={Login} />
                             <div>
 
                             </div>
