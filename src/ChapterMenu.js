@@ -4,6 +4,7 @@ import { Container, Button, Row, Col, Card, Form, Input } from "react-bootstrap"
 import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import { Link, BrowserRouter as Router } from 'react-router-dom'
+import MyNavBar from './MyNavBar';
 
 
 export function targetInfo() {
@@ -49,38 +50,41 @@ export default class ChapterMenu extends React.Component {
     render() {
         //console.log(this.state.chosenChapterId+"    hoo");
         return (
-            <Container>
-                {
-                    this.state.chapters.map((chap, index) => {
-                        return (
-                            <Card
-                                className="mt-3" key={index}>
-                                <Row className="mt-5 justify-content-center">
-                                    <Col className="text-center">
-                                        <div>
-                                            <h3>{chap.title}</h3>
-                                            <p>{chap.subHead}</p>
-                                        </div>
-                                    </Col>
+            <div>
+                <MyNavBar></MyNavBar>
+                <Container>
+                    {
+                        this.state.chapters.map((chap, index) => {
+                            return (
+                                <Card
+                                    className="mt-3" key={index}>
+                                    <Row className="mt-5 justify-content-center">
+                                        <Col className="text-center">
+                                            <div>
+                                                <h3>{chap.title}</h3>
+                                                <p>{chap.subHead}</p>
+                                            </div>
+                                        </Col>
 
-                                    <Col>
-                                        <Link to="/TasksList">
-                                            <Button style={{ marginLeft: 10 }} value={chap.id} onClick={() => (this.setTargetInfo(chap.id, chap.title, chap.subHead, index))}>Övningssida</Button>
-                                        </Link>
+                                        <Col>
+                                            <Link to="/TasksList">
+                                                <Button style={{ marginLeft: 10 }} value={chap.id} onClick={() => (this.setTargetInfo(chap.id, chap.title, chap.subHead, index))}>Övningssida</Button>
+                                            </Link>
 
-                                        <Link to="/EditChapter">
-                                            <Button style={{ marginLeft: 10, backgroundColor: ('green') }} value={chap.id} onClick={() => (this.setChapterData(chap, index))}>Redigera</Button>
-                                        </Link>
+                                            <Link to="/EditChapter">
+                                                <Button style={{ marginLeft: 10, backgroundColor: ('green') }} value={chap.id} onClick={() => (this.setChapterData(chap, index))}>Redigera</Button>
+                                            </Link>
 
-                                        <Button style={{ marginLeft: 10, backgroundColor: ('red') }} value={chap.id} onClick={() => (this.deleteDocument(chap.id))}>Ta bort</Button>
-                                    </Col>
-                                    <br />
-                                </Row>
-                            </Card>
-                        )
-                    })
-                }
-            </Container>
+                                            <Button style={{ marginLeft: 10, backgroundColor: ('red') }} value={chap.id} onClick={() => (this.deleteDocument(chap.id))}>Ta bort</Button>
+                                        </Col>
+                                        <br />
+                                    </Row>
+                                </Card>
+                            )
+                        })
+                    }
+                </Container>
+            </div>
         )
     }
 
@@ -162,8 +166,7 @@ export default class ChapterMenu extends React.Component {
 
             }
 
-            if(chapter.tasks !== undefined)
-            {
+            if (chapter.tasks !== undefined) {
                 chapter.tasks.forEach((item) => {
                     t.delete(chapterRef.collection('tasks').doc(item.id));
                 })

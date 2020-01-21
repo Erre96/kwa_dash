@@ -5,6 +5,7 @@ import { db } from "./FirebaseData.js";
 import firebase from "firebase";
 import { chapterData, targetInfo } from './ChapterMenu';
 import { Link, BrowserRouter as Router } from 'react-router-dom'
+import MyNavBar from './MyNavBar';
 
 class EditChapter extends React.Component {
     constructor(props) {
@@ -154,6 +155,8 @@ class EditChapter extends React.Component {
         //  console.log(title, subHead,premium, description, videoLink);
 
         return (
+            <div>
+            <MyNavBar></MyNavBar>
             <Container>
                 <Card>
                     <Row className="mt-2 justify-content-center">
@@ -181,7 +184,7 @@ class EditChapter extends React.Component {
 
                             <div className="mt-3">
                                 <p>Description of the Chapter</p>
-                                <textarea rows="4" cols="50" type="text" onChange={this.handleInputchange} name="bodyText" value={bodyText}></textarea>
+                                <textarea rows="12" cols="80" type="text" onChange={this.handleInputchange} name="bodyText" value={bodyText}></textarea>
                             </div>
 
                             <div className="mt-3" style={{ padding: 10 }}>
@@ -223,6 +226,7 @@ class EditChapter extends React.Component {
                     </Row>
                 </Card>
             </Container>
+            </div>
         )
     }
 }

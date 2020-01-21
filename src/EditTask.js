@@ -6,6 +6,7 @@ import firebase from "firebase";
 import { targetInfo } from './ChapterMenu';
 import { taskData } from './TasksList';
 import { Link, BrowserRouter as Router } from 'react-router-dom';
+import MyNavBar from './MyNavBar';
 
 
 
@@ -112,42 +113,45 @@ class EditTask extends React.Component {
         //  console.log(title, subHead,premium, description, videoLink);
 
         return (
-            <Container>
-                <Card>
-                    <Row className="mt-2 justify-content-center">
-                        <Col className="text-center">
-                            <form onSubmit={this.handleSubmit}>
-                                <h1>Edit Task</h1>
-                                <div className="mt-3">
-                                    <p>Title of the Task</p>
-                                    <input type="text" onChange={this.handleInputchange} name='title' value={title}></input>
-                                </div>
+            <div>
+                <MyNavBar></MyNavBar>
+                <Container>
+                    <Card>
+                        <Row className="mt-2 justify-content-center">
+                            <Col className="text-center">
+                                <form onSubmit={this.handleSubmit}>
+                                    <h1>Edit Task</h1>
+                                    <div className="mt-3">
+                                        <p>Title of the Task</p>
+                                        <input type="text" onChange={this.handleInputchange} name='title' value={title}></input>
+                                    </div>
 
-                                <div className="mt-3">
-                                    <p>Subhead</p>
-                                    <input type="text" onChange={this.handleInputchange} name='subHead' value={subHead}></input>
-                                </div>
+                                    <div className="mt-3">
+                                        <p>Subhead</p>
+                                        <input type="text" onChange={this.handleInputchange} name='subHead' value={subHead}></input>
+                                    </div>
 
-                                <div className="mt-3">
-                                    <p>Estimated Time to finish task</p>
-                                    <input type="text" onChange={this.handleInputchange} name='time' value={time}></input>
-                                </div>
+                                    <div className="mt-3">
+                                        <p>Estimated Time to finish task</p>
+                                        <input type="text" onChange={this.handleInputchange} name='time' value={time}></input>
+                                    </div>
 
-                                <div className="mt-3">
-                                    <p>HTML Content</p>
-                                    <textarea rows="10" cols="50" type="text" onChange={this.handleInputchange} name="bodyHTML" value={bodyHTML}></textarea>
-                                </div>
+                                    <div className="mt-3">
+                                        <p>HTML Content</p>
+                                        <textarea rows="15" cols="100" type="text" onChange={this.handleInputchange} name="bodyHTML" value={bodyHTML}></textarea>
+                                    </div>
 
-                                <div className="mt-3">
-                                    <Link to='TasksList'>
-                                        <Button onClick={this.writeToSubCollection}>Update</Button>
-                                    </Link>
-                                </div>
-                            </form>
-                        </Col>
-                    </Row>
-                </Card>
-            </Container>
+                                    <div className="mt-3">
+                                        <Link to='TasksList'>
+                                            <Button onClick={this.writeToSubCollection}>Update</Button>
+                                        </Link>
+                                    </div>
+                                </form>
+                            </Col>
+                        </Row>
+                    </Card>
+                </Container>
+            </div>
         )
     }
 }

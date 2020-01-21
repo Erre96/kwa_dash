@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import {fire} from './FirebaseData';
-import {Button} from 'react-bootstrap';
+import {Button, Row, Navbar } from "react-bootstrap";
 
 export class Login extends Component {
     constructor(props) {
@@ -25,6 +25,9 @@ export class Login extends Component {
     login(e) {
         e.preventDefault();
         fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u) => {
+            console.log('shit');
+            this.setState({
+            });
         }).catch((error) => {
             console.log(error);
         });
@@ -32,23 +35,23 @@ export class Login extends Component {
 
     render() {
         return (
-            <div className='text-center' style={{marginTop:20}}>
-                <h1 style={{color:('white'), backgroundColor:('darkRed')}}>Kärlekstanken Dashboard</h1>
-                <br></br>
-                <h3>Logga in</h3>
-                <div>
+            <Navbar bg="dark" expand="lg">
+            <Row className="text-center">
+                <h3 style={{ color: "white", marginLeft: 30 }}>Kärlekstanken Dashboard</h3>
+                <div style={{marginLeft:20}}>
                     <form onSubmit={this.handleSubmit}>
                         <p> <input type='text' placeholder='Din email' name='email' onChange={this.handleInputchange} /></p>
                     </form>
                 </div>
 
-                <div>
+                <div style={{marginLeft:10}}>
                     <form onSubmit={this.handleSubmit}>
                         <p> <input type='password' placeholder='Ditt lösenord' name='password' onChange={this.handleInputchange} /></p>
                     </form>
                 </div>
-                <p> <Button onClick={this.login}>Logga in</Button></p>
-            </div>
+                <p> <Button style={{marginLeft: 10}} onClick={this.login}>Logga in</Button></p>
+            </Row>
+        </Navbar>
         )
     }
 }

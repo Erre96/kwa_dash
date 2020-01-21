@@ -3,6 +3,7 @@ import { targetInfo, chapterData } from './ChapterMenu';
 import { db } from './FirebaseData';
 import { Container, Button, Row, Col, Card } from "react-bootstrap";
 import { Link, BrowserRouter as Router } from 'react-router-dom';
+import MyNavBar from './MyNavBar';
 
 export function taskData() {
     let id = '';
@@ -101,46 +102,51 @@ export class TasksList extends React.Component {
     render() {
         if (this.state.tasks !== undefined) {
             return (
+                <div>
+                    <MyNavBar></MyNavBar>
+                    <div style={{ marginTop: 15 }}>
+                        <Container className='text-center'>
+                            <h3>{targetInfo.chapterTitle}</h3>
+                            <h5>{targetInfo.chapterSubHead}</h5>
+                            {
+                                this.state.tasks.map((task, index) => {
+                                    return (
+                                        <Card style={{ padding: 10 }} className='mt-5 justify-content-center' key={index} >
+                                            <Row>
+                                                <Col>
+                                                    <h5>{task.title}</h5>
+                                                    <p>{task.subHead}</p>
 
-                <div style={{ marginTop: 15 }}>
-                    <Container className='text-center'>
-                        <h3>{targetInfo.chapterTitle}</h3>
-                        <h5>{targetInfo.chapterSubHead}</h5>
-                        {
-                            this.state.tasks.map((task, index) => {
-                                return (
-                                    <Card style={{ padding: 10 }} className='mt-5 justify-content-center' key={index} >
-                                        <Row>
-                                            <Col>
-                                                <h5>{task.title}</h5>
-                                                <p>{task.subHead}</p>
+                                                </Col>
 
-                                            </Col>
-
-                                            <Col>
-                                                <Link to='editTask'>
-                                                    <Button onClick={() => (this.setTaskId(task.id, index))}>Redigera</Button>
-                                                </Link>
-                                            </Col>
-                                            <Col>
-                                                <Button style={{ backgroundColor: ('red') }} onClick={() => (this.deleteTask(task.id, index))}>Ta Bort</Button>
-                                            </Col>
-                                        </Row>
-                                    </Card>
-                                )
-                            })
-                        }
-                        <AddButton></AddButton>
-                    </Container>
+                                                <Col>
+                                                    <Link to='editTask'>
+                                                        <Button onClick={() => (this.setTaskId(task.id, index))}>Redigera</Button>
+                                                    </Link>
+                                                </Col>
+                                                <Col>
+                                                    <Button style={{ backgroundColor: ('red') }} onClick={() => (this.deleteTask(task.id, index))}>Ta Bort</Button>
+                                                </Col>
+                                            </Row>
+                                        </Card>
+                                    )
+                                })
+                            }
+                            <AddButton></AddButton>
+                        </Container>
+                    </div>
                 </div>
             )
         }
         else
             return (
-                <div style={{ marginTop: 15 }} className="text-center">
-                    <h3>{targetInfo.chapterTitle}</h3>
-                    <h5>{targetInfo.chapterSubHead}</h5>
-                    <AddButton></AddButton>
+                <div>
+                    <MyNavBar></MyNavBar>
+                    <div style={{ marginTop: 15 }} className="text-center">
+                        <h3>{targetInfo.chapterTitle}</h3>
+                        <h5>{targetInfo.chapterSubHead}</h5>
+                        <AddButton></AddButton>
+                    </div>
                 </div>
             )
     }
