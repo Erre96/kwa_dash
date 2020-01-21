@@ -13,7 +13,7 @@ import Login from './Login'
 import { Route, Link, BrowserRouter as Router, Redirect } from 'react-router-dom'
 
 
-export default class Home extends React.Component {
+export default class MyNavBar extends React.Component {
     render() {
         return (
             <div>
@@ -27,10 +27,9 @@ export default class Home extends React.Component {
                     </Navbar>
 
                     <Container>
-
                         <div>
                             <Route path='/'>
-                                <Redirect to="/login"/>
+                                <Redirect to="/login" />
                             </Route>
                             <Route path="/createChapter" component={CreateChapter} />
                             <Route path="/chapterMenu" component={ChapterMenu} />
@@ -41,7 +40,6 @@ export default class Home extends React.Component {
                             <Route path="/alert" component={AlertPage} />
                             <Route path="/login" component={Login} />
                             <div>
-
                             </div>
                         </div>
                     </Container>

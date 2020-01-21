@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Home from './Home'
+import MyNavBar from './Home';
+import Login from './Login'
 
 
 
@@ -9,7 +10,7 @@ import Home from './Home'
 
 function App() {
     return (
-        <Home key="home"></Home>
+        <Login></Login>
     );
   }
   

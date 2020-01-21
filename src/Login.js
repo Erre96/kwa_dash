@@ -31,12 +31,11 @@ export class Login extends Component {
     }
 
     render() {
-        const { email } = this.state
-        const { password } = this.state
-
         return (
             <div className='text-center' style={{marginTop:20}}>
-                <h1>Logga in</h1>
+                <h1 style={{color:('white'), backgroundColor:('darkRed')}}>Kärlekstanken Dashboard</h1>
+                <br></br>
+                <h3>Logga in</h3>
                 <div>
                     <form onSubmit={this.handleSubmit}>
                         <p> <input type='text' placeholder='Din email' name='email' onChange={this.handleInputchange} /></p>
