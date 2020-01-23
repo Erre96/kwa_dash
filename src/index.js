@@ -73,7 +73,7 @@ class App extends React.Component {
               <PrivateRoute path="/editChapter" component={EditChapter} exact />
               <PrivateRoute path="/editTask" component={EditTask} exact />
               <PrivateRoute path="/" component={MyNavBar} exact />
-              <Route path="/alert" component={AlertPage} exact />
+              <PrivateRoute path="/alert" component={AlertPage} exact />
               <PublicRoute path='/login' component={Login} restricted={true} exact />
             </Switch>
           </BrowserRouter>
