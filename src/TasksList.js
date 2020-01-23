@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { targetInfo, chapterData } from './ChapterMenu';
+import React from 'react'
+import { targetInfo } from './ChapterMenu';
 import { db } from './FirebaseData';
 import { Container, Button, Row, Col, Card } from "react-bootstrap";
 import { Link, BrowserRouter as Router } from 'react-router-dom';

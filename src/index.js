@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import MyNavBar from './MyNavBar';
-import { Container, Button, Row, Navbar } from "react-bootstrap";
 import Login from './Login'
 import CreateChapter from './CreateChapter'
 import EditChapter from './EditChapter'
@@ -14,7 +13,7 @@ import CreateTask from './CreateTask'
 import AlertPage from './AlertPage'
 import { PublicRoute, PrivateRoute } from './CustomRoutes'
 import { AuthUserProvider } from './AuthUserContext'
-import { Route, Link, BrowserRouter as Router, BrowserRouter, Switch, Redirect } from 'react-router-dom'
+import {BrowserRouter as Router, BrowserRouter, Switch } from 'react-router-dom'
 import { auth } from './FirebaseData';
 
 
@@ -34,7 +33,7 @@ class App extends React.Component {
   componentDidMount() {
     this.unsubAuthUser = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-       // this.checkAdmin(authUser);
+        this.checkAdmin(authUser);
         localStorage.setItem(KEY_AUTH_USER, JSON.stringify(authUser));
         this.setState({ authUser: authUser });
 

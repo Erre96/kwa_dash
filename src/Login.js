@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
 import {fire} from './FirebaseData';
 import {Button, Row, Navbar } from "react-bootstrap";
 

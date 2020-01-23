@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Button, Row, Col, Form, Alert, Container } from "react-bootstrap";
 import { db } from "./FirebaseData.js";
-import firebase from "firebase";
 import { chapterData, targetInfo } from './ChapterMenu';
 import { Link, BrowserRouter as Router } from 'react-router-dom'
 import MyNavBar from './MyNavBar';

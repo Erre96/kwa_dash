@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, Row, Col, Form, Navbar, Alert } from "react-bootstrap";
+import {Alert } from "react-bootstrap";
 import MyNavBar from './MyNavBar';
 
 export class AlertPage extends Component {

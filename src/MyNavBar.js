@@ -1,14 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Button, Row, Navbar } from "react-bootstrap";
-import CreateChapter from './CreateChapter'
-import EditChapter from './EditChapter'
-import EditTask from './EditTask'
-import ChapterMenu from './ChapterMenu'
-import TasksList from './TasksList'
-import CreateTask from './CreateTask'
-import AlertPage from './AlertPage'
-import Login from './Login'
+import {Button, Row, Navbar } from "react-bootstrap";
 
 import { Route, Link, BrowserRouter as Router, BrowserRouter, Switch, Redirect } from 'react-router-dom'
 import { auth } from './FirebaseData';
