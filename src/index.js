@@ -15,6 +15,7 @@ import { PublicRoute, PrivateRoute } from './CustomRoutes'
 import { AuthUserProvider } from './AuthUserContext'
 import {BrowserRouter as Router, BrowserRouter, Switch } from 'react-router-dom'
 import { auth } from './FirebaseData';
+import EditOther from './EditOther';
 
 
 
@@ -66,6 +67,7 @@ class App extends React.Component {
           <BrowserRouter>
             <Switch>
               <PrivateRoute path="/createChapter" component={CreateChapter} exact />
+              <PrivateRoute path="/editOther" component={EditOther} exact />
               <PrivateRoute path="/chapterMenu" component={ChapterMenu} exact />
               <PrivateRoute path="/tasksList" component={TasksList} exact />
               <PrivateRoute path="/createTask" component={CreateTask} exact />

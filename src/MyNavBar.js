@@ -23,6 +23,7 @@ export default class MyNavBar extends React.Component {
                         <h3 style={{ color: "white", marginLeft: 30 }}>Kärlekstanken Dashboard</h3>
                         <Link style={{ color: "white", marginLeft: 30 }} to="/createChapter">Skapa Avsnitt</Link>
                         <Link style={{ color: "white", marginLeft: 30 }} to="/chapterMenu">Avsnittssida</Link>
+                        <Link style={{ color: "white", marginLeft: 30 }} to="/editOther">General</Link>
                         <Button style={{ marginLeft: 30 }} onClick={()=> auth.signOut()}>Logga ut</Button>
                     </Row>
                 </Navbar>
