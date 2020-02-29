@@ -77,7 +77,15 @@ class EditOther extends React.Component {
 
             } else {
                 // doc.data() will be undefined in this case
-                console.log("No such document!");
+                db.collection("other").doc("strings").set({
+                    aboutHTML : newData.aboutHTML,
+                    contactEmail : newData.contactEmail,
+                    invitationMailHTML : newData.invitationMailHTML,
+                    invitationMailText : newData.invitationMailText,
+                    invitationMailTitle : newData.invitationMailTitle,
+                    purchaseModalHTML : newData.purchaseModalHTML,
+                    welcomeModalHTML : newData.welcomeModalHTML,
+                });
             }
         }).catch(function (error) {
             console.log("Error getting document:", error);
